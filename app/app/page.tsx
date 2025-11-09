@@ -155,13 +155,7 @@ function PatternsView() {
 }
 
 function CounterView() {
-  return (
-    <div className="card text-center py-12">
-      <div className="text-6xl mb-4">🔢</div>
-      <h3 className="text-2xl font-bold text-warmBrown mb-2">Row Counter</h3>
-      <p className="text-warmBrown-dark">Coming soon! Never lose count again.</p>
-    </div>
-  )
+  return <RowCounter />
 }
 
 function StashView() {
@@ -214,3 +208,4 @@ function ProjectCard({ name, progress, lastWorked }: { name: string; progress: n
     </div>
   )
 }
+import RowCounter from '../components/RowCounter'
