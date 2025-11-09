@@ -1,8 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { Home, Book, Hash, Package, Camera, DollarSign, Settings } from 'lucide-react'
-import RowCounter from '../components/RowCounter'
+import {
+  Home as HomeIcon,
+  Book,
+  Hash,
+  Package,
+  Camera,
+  DollarSign,
+  Settings
+} from 'lucide-react'
+import RowCounter from '../../components/RowCounter'
 
 export default function AppPage() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -58,7 +66,7 @@ export default function AppPage() {
 
 // Navigation items
 const navItems = [
-  { id: 'dashboard', label: 'Home', icon: Home },
+  { id: 'dashboard', label: 'Home', icon: HomeIcon },
   { id: 'patterns', label: 'Patterns', icon: Book },
   { id: 'counter', label: 'Counter', icon: Hash },
   { id: 'stash', label: 'Stash', icon: Package },
@@ -75,9 +83,7 @@ function DashboardView() {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="card">
           <h3 className="text-xl font-bold text-warmBrown mb-3">Quick Start</h3>
-          <p className="text-warmBrown-dark mb-4">
-            Jump right in with your most-used tools:
-          </p>
+          <p className="text-warmBrown-dark mb-4">Jump right in with your most-used tools:</p>
           <div className="space-y-2">
             <button className="btn-primary w-full">Start Row Counter</button>
             <button className="btn-secondary w-full">Add Pattern</button>
@@ -119,7 +125,6 @@ function DashboardView() {
   )
 }
 
-// Patterns View
 function PatternsView() {
   return (
     <div className="card text-center py-12">
@@ -130,12 +135,10 @@ function PatternsView() {
   )
 }
 
-// Counter View - NOW USES THE REAL ROW COUNTER!
 function CounterView() {
   return <RowCounter />
 }
 
-// Stash View
 function StashView() {
   return (
     <div className="card text-center py-12">
@@ -146,7 +149,6 @@ function StashView() {
   )
 }
 
-// Photos View
 function PhotosView() {
   return (
     <div className="card text-center py-12">
@@ -157,7 +159,6 @@ function PhotosView() {
   )
 }
 
-// Pricing View
 function PricingView() {
   return (
     <div className="card text-center py-12">
