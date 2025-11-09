@@ -1,6 +1,6 @@
-'use client' // THIS MUST BE THE FIRST LINE
-
 // /vercel/path0/app/app/page.tsx
+
+'use client' // THIS MUST BE THE FIRST LINE
 
 import { useState } from 'react'
 import { Home, Book, Hash, Package, Camera, DollarSign, Settings } from 'lucide-react'
