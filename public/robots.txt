@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: mycrochetkit.com/sitemap.xml
+Sitemap: https://mycrochetkit.com/sitemap.xml
 
 # Block admin/auth pages from search results
 Disallow: /api/
