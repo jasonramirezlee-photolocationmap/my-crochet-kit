@@ -1,11 +1,9 @@
 import Link from 'next/link'
 import Script from 'next/script'
 
-// The landing page component (Server Component by default)
 export default function Home() {
   // Structured Data for Google (JSON-LD)
   const structuredData = {
-    // ... (Your structuredData object remains here, lines 9-51)
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'My Crochet Kit',
@@ -59,7 +57,6 @@ export default function Home() {
       />
       
       {/* Hero Section */}
-      {/* ... (Your Hero, Features, Pricing, and Footer JSX remains here, lines 62-167) ... */}
       <header className="bg-gradient-to-br from-rose-light via-lavender-light to-sage-light">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="text-center max-w-4xl mx-auto">
@@ -168,7 +165,6 @@ export default function Home() {
   )
 }
 
-// Data Arrays for the Landing Page
 const features = [
   {
     icon: '📝',
@@ -260,3 +256,6 @@ const pricingTiers = [
       'Export patterns to sell on Etsy',
     ],
     cta: 'Become a Master',
+    featured: false,
+  },
+]
