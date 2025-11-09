@@ -1,5 +1,3 @@
-// /vercel/path0/app/page.tsx
-
 import Link from 'next/link'
 import Script from 'next/script'
 
