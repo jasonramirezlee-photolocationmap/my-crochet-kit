@@ -1,89 +1,77 @@
+// /vercel/path0/components/RowCounter.tsx
+
 'use client'
 
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
-import { Plus, Minus, Trash2, Edit2, RotateCcw, Bell } from 'lucide-react'
+import { useState } from 'react'
+import { Plus, Minus, RotateCcw } from 'lucide-react'
 
-interface Counter {
-  id: number
-  project_name: string
-  count: number
-  alert_row: number | null
-  alert_message: string | null
-  created_at: string
-}
-
+/**
+ * RowCounter Component
+ * A simple, stateful component for tracking rows in a crochet project.
+ */
 export default function RowCounter() {
-  const [counters, setCounters] = useState<Counter[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [newProjectName, setNewProjectName] = useState('')
-  const [editingCounter, setEditingCounter] = useState<number | null>(null)
-  const [editAlertRow, setEditAlertRow] = useState<string>('')
-  const [editAlertMessage, setEditAlertMessage] = useState<string>('')
+  // State to hold the current row count
+  const [count, setCount] = useState(0)
 
-  // Load counters from database
-  useEffect(() => {
-    loadCounters()
-  }, [])
+  // Function to increment the count
+  const increment = () => {
+    setCount(prevCount => prevCount + 1)
+  }
 
-  async function loadCounters() {
-    try {
-      const { data, error } = await supabase
-        .from('counters')
-        .select('*')
-        .order('created_at', { ascending: false })
+  // Function to decrement the count, preventing negative numbers
+  const decrement = () => {
+    setCount(prevCount => Math.max(0, prevCount - 1))
+  }
 
-      if (error) throw error
-      setCounters(data || [])
-    } catch (error) {
-      console.error('Error loading counters:', error)
-      alert('Failed to load counters. Please refresh the page.')
-    } finally {
-      setLoading(false)
+  // Function to reset the count to zero
+  const reset = () => {
+    if (window.confirm('Are you sure you want to reset the row count?')) {
+      setCount(0)
     }
   }
 
-  async function addCounter() {
-    if (!newProjectName.trim()) {
-      alert('Please enter a project name!')
-      return
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('counters')
-        .insert([{ project_name: newProjectName, count: 0 }])
-        .select()
-
-      if (error) throw error
+  return (
+    <div className="bg-cream p-6 rounded-xl shadow-lg border border-cream-dark max-w-md mx-auto">
+      <h2 className="text-3xl font-bold text-warmBrown text-center mb-6">
+        Row Counter 🧶
+      </h2>
       
-      setCounters([data[0], ...counters])
-      setNewProjectName('')
-      setShowAddForm(false)
-    } catch (error) {
-      console.error('Error adding counter:', error)
-      alert('Failed to add counter. Please try again.')
-    }
-  }
+      {/* Current Count Display */}
+      <div className="text-center mb-8">
+        <p className="text-xl text-warmBrown-dark">Current Row:</p>
+        <p className="text-9xl font-extrabold text-rose transition-transform transform duration-150 ease-out">
+          {count}
+        </p>
+      </div>
 
-  async function updateCount(id: number, newCount: number) {
-    // Don't allow negative counts
-    if (newCount < 0) return
+      {/* Control Buttons */}
+      <div className="flex gap-4 mb-6">
+        <button
+          onClick={decrement}
+          className="flex-1 btn-secondary py-4 text-2xl"
+          aria-label="Decrement row count"
+          disabled={count === 0}
+        >
+          <Minus size={32} className="mx-auto" />
+        </button>
+        <button
+          onClick={increment}
+          className="flex-1 btn-primary py-4 text-2xl"
+          aria-label="Increment row count"
+        >
+          <Plus size={32} className="mx-auto" />
+        </button>
+      </div>
 
-    try {
-      const { error } = await supabase
-        .from('counters')
-        .update({ count: newCount })
-        .eq('id', id)
-
-      if (error) throw error
-
-      setCounters(counters.map(c => 
-        c.id === id ? { ...c, count: newCount } : c
-      ))
-
-      // Check if we hit an alert
-      const counter = counters.find(c => c.id === id)
-      if (counter?.alert_row && newCount === counter.alert_row && counter.alert_message) {
-        aler
+      {/* Reset Button */}
+      <button
+        onClick={reset}
+        className="w-full text-warmBrown-light hover:text-rose transition-colors flex items-center justify-center gap-2"
+        aria-label="Reset row count to zero"
+      >
+        <RotateCcw size={18} />
+        Reset Counter
+      </button>
+    </div>
+  )
+}
