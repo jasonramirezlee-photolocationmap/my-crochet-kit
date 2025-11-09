@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar for a yarn-inspired look */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFF8F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4A5A5;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B88A8A;
+}
+
+/* Smooth transitions everywhere */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom classes for common patterns */
+@layer components {
+  .btn-primary {
+    @apply bg-rose hover:bg-rose-dark text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-sage hover:bg-sage-dark text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-200;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border-2 border-cream-dark rounded-lg focus:outline-none focus:border-rose transition-colors duration-200;
+  }
+}
+
+/* Prevent pull-to-refresh on mobile */
+body {
+  overscroll-behavior-y: contain;
+}
