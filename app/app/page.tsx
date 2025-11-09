@@ -1,5 +1,5 @@
 'use client'
-
+import RowCounter from '../components/RowCounter'
 import { useState } from 'react'
 import { Home, Book, Hash, Package, Camera, DollarSign, Settings } from 'lucide-react'
 
@@ -208,4 +208,3 @@ function ProjectCard({ name, progress, lastWorked }: { name: string; progress: n
     </div>
   )
 }
-import RowCounter from '../components/RowCounter'
