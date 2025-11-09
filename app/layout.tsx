@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://my-crochet-kit.vercel.app'),
+  metadataBase: new URL('mycrochetkit.com'),
   title: {
     default: 'My Crochet Kit - Free Crochet Pattern Tracker & Row Counter App',
     template: '%s | My Crochet Kit',
