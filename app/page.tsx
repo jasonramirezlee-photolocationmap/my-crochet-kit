@@ -262,6 +262,3 @@ const pricingTiers = [
       'Export patterns to sell on Etsy',
     ],
     cta: 'Become a Master',
-    featured: false,
-  },
-]
