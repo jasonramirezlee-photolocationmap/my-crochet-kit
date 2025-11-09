@@ -1,28 +1,8 @@
-// /vercel/path0/app/app/page.tsx
-
-'use client' // THIS MUST BE THE FIRST LINE
+'use client'
 
 import { useState } from 'react'
 import { Home, Book, Hash, Package, Camera, DollarSign, Settings } from 'lucide-react'
-import RowCounter from '../components/RowCounter' // Assuming RowCounter is in /components
-
-// Placeholder components (You'll need to define these in your /components folder)
-const DashboardView = () => <div className="p-4 bg-cream rounded-lg text-warmBrown-dark">Dashboard content goes here.</div>
-const PatternsView = () => <div className="p-4 bg-cream rounded-lg text-warmBrown-dark">Patterns Manager content goes here.</div>
-const CounterView = () => <RowCounter /> // Assuming RowCounter is a complete component
-const StashView = () => <div className="p-4 bg-cream rounded-lg text-warmBrown-dark">Stash Tracker content goes here.</div>
-const PhotosView = () => <div className="p-4 bg-cream rounded-lg text-warmBrown-dark">Progress Photos content goes here.</div>
-const PricingView = () => <div className="p-4 bg-cream rounded-lg text-warmBrown-dark">Pricing Calculator content goes here.</div>
-
-// Navigation items (moved here from the original file)
-const navItems = [
-  { id: 'dashboard', label: 'Home', icon: Home },
-  { id: 'patterns', label: 'Patterns', icon: Book },
-  { id: 'counter', label: 'Counter', icon: Hash },
-  { id: 'stash', label: 'Stash', icon: Package },
-  { id: 'photos', label: 'Photos', icon: Camera },
-  { id: 'pricing', label: 'Pricing', icon: DollarSign },
-]
+import RowCounter from '../components/RowCounter'
 
 export default function AppPage() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -72,6 +52,118 @@ export default function AppPage() {
           </div>
         </div>
       </nav>
+    </div>
+  )
+}
+
+// Navigation items
+const navItems = [
+  { id: 'dashboard', label: 'Home', icon: Home },
+  { id: 'patterns', label: 'Patterns', icon: Book },
+  { id: 'counter', label: 'Counter', icon: Hash },
+  { id: 'stash', label: 'Stash', icon: Package },
+  { id: 'photos', label: 'Photos', icon: Camera },
+  { id: 'pricing', label: 'Pricing', icon: DollarSign },
+]
+
+// Dashboard View
+function DashboardView() {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-3xl font-bold text-warmBrown">Welcome to Your Crochet Kit! 🧶</h2>
+      
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="card">
+          <h3 className="text-xl font-bold text-warmBrown mb-3">Quick Start</h3>
+          <p className="text-warmBrown-dark mb-4">
+            Jump right in with your most-used tools:
+          </p>
+          <div className="space-y-2">
+            <button className="btn-primary w-full">Start Row Counter</button>
+            <button className="btn-secondary w-full">Add Pattern</button>
+          </div>
+        </div>
+
+        <div className="card bg-gradient-to-br from-rose-light to-lavender-light">
+          <h3 className="text-xl font-bold text-warmBrown mb-3">Your Stats</h3>
+          <div className="space-y-2 text-warmBrown-dark">
+            <p>📚 <strong>0</strong> Patterns saved</p>
+            <p>🧶 <strong>0</strong> Projects tracked</p>
+            <p>📸 <strong>0</strong> Photos captured</p>
+            <p>⏱️ <strong>0 hours</strong> of crafting time</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3 className="text-xl font-bold text-warmBrown mb-3">Featured Tools</h3>
+        <div className="grid sm:grid-cols-3 gap-4">
+          <div className="text-center p-4 bg-cream-dark rounded-lg">
+            <div className="text-4xl mb-2">🔢</div>
+            <h4 className="font-semibold text-warmBrown">Row Counter</h4>
+            <p className="text-sm text-warmBrown-dark">Never lose count</p>
+          </div>
+          <div className="text-center p-4 bg-cream-dark rounded-lg">
+            <div className="text-4xl mb-2">📝</div>
+            <h4 className="font-semibold text-warmBrown">Patterns</h4>
+            <p className="text-sm text-warmBrown-dark">Organize your collection</p>
+          </div>
+          <div className="text-center p-4 bg-cream-dark rounded-lg">
+            <div className="text-4xl mb-2">🧵</div>
+            <h4 className="font-semibold text-warmBrown">Yarn Stash</h4>
+            <p className="text-sm text-warmBrown-dark">Track your inventory</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Patterns View
+function PatternsView() {
+  return (
+    <div className="card text-center py-12">
+      <div className="text-6xl mb-4">📚</div>
+      <h3 className="text-2xl font-bold text-warmBrown mb-2">Pattern Library</h3>
+      <p className="text-warmBrown-dark">Coming soon! Import and organize all your patterns.</p>
+    </div>
+  )
+}
+
+// Counter View - NOW USES THE REAL ROW COUNTER!
+function CounterView() {
+  return <RowCounter />
+}
+
+// Stash View
+function StashView() {
+  return (
+    <div className="card text-center py-12">
+      <div className="text-6xl mb-4">🧵</div>
+      <h3 className="text-2xl font-bold text-warmBrown mb-2">Yarn Stash Tracker</h3>
+      <p className="text-warmBrown-dark">Coming soon! Keep track of all your yarn.</p>
+    </div>
+  )
+}
+
+// Photos View
+function PhotosView() {
+  return (
+    <div className="card text-center py-12">
+      <div className="text-6xl mb-4">📸</div>
+      <h3 className="text-2xl font-bold text-warmBrown mb-2">Progress Photos</h3>
+      <p className="text-warmBrown-dark">Coming soon! Document your crochet journey.</p>
+    </div>
+  )
+}
+
+// Pricing View
+function PricingView() {
+  return (
+    <div className="card text-center py-12">
+      <div className="text-6xl mb-4">💰</div>
+      <h3 className="text-2xl font-bold text-warmBrown mb-2">Pricing Calculator</h3>
+      <p className="text-warmBrown-dark">Coming soon! Calculate fair prices for your work.</p>
     </div>
   )
 }
