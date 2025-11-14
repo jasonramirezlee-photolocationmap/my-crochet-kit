@@ -10,7 +10,7 @@ import {
   DollarSign,
   Settings
 } from 'lucide-react'
-import RowCounter from '../../components/RowCounter'
+import RowCounter from '../components/RowCounter'
 
 export default function AppPage() {
   const [activeTab, setActiveTab] = useState('dashboard')
