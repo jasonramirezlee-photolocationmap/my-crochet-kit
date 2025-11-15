@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -35,7 +35,6 @@ export const metadata: Metadata = {
   creator: 'My Crochet Kit',
   publisher: 'My Crochet Kit',
   manifest: '/manifest.json',
-  themeColor: '#D4A5A5',
   
   // Open Graph (Facebook, LinkedIn, etc.)
   openGraph: {
@@ -77,14 +76,6 @@ export const metadata: Metadata = {
     apple: '/icon-192x192.png',
   },
   
-  // Viewport
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5, // Changed from 1 to allow zoom for accessibility
-    userScalable: true, // Changed to true for accessibility
-  },
-  
   // Additional SEO
   category: 'lifestyle',
   alternates: {
@@ -101,6 +92,14 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5, // Changed from 1 to allow zoom for accessibility
+  userScalable: true, // Changed to true for accessibility
+  themeColor: '#D4A5A5',
 }
 
 export default function RootLayout({

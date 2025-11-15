@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Plus, Minus, Trash2, Edit2, RotateCcw, Bell } from 'lucide-react'
+import { Plus, Minus, Trash2, RotateCcw, Bell } from 'lucide-react'
 
 interface Counter {
   id: number
@@ -11,6 +11,28 @@ interface Counter {
   alert_row: number | null
   alert_message: string | null
   created_at: string
+}
+
+const LOCAL_STORAGE_KEY = 'my-crochet-kit:row-counters'
+
+const getStoredCounters = (): Counter[] => {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as Counter[]) : []
+  } catch (error) {
+    console.error('Error reading local counters:', error)
+    return []
+  }
+}
+
+const persistStoredCounters = (counters: Counter[]) => {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(counters))
+  } catch (error) {
+    console.error('Error saving local counters:', error)
+  }
 }
 
 export default function RowCounter() {
@@ -27,9 +49,29 @@ export default function RowCounter() {
     loadCounters()
   }, [])
 
+  const shouldUseLocalStorage = !supabase
+
+  const updateCounterState = (updater: (prev: Counter[]) => Counter[]) => {
+    let updatedState: Counter[] = []
+    setCounters((prev) => {
+      updatedState = updater(prev)
+      return updatedState
+    })
+
+    if (shouldUseLocalStorage) {
+      persistStoredCounters(updatedState)
+    }
+  }
+
   async function loadCounters() {
+    if (shouldUseLocalStorage) {
+      setCounters(getStoredCounters())
+      setLoading(false)
+      return
+    }
+
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabase!
         .from('counters')
         .select('*')
         .order('created_at', { ascending: false })
@@ -45,20 +87,38 @@ export default function RowCounter() {
   }
 
   async function addCounter() {
-    if (!newProjectName.trim()) {
+    const trimmedName = newProjectName.trim()
+    if (!trimmedName) {
       alert('Please enter a project name!')
       return
     }
 
+    if (shouldUseLocalStorage) {
+      const newCounter: Counter = {
+        id: Date.now(),
+        project_name: trimmedName,
+        count: 0,
+        alert_row: null,
+        alert_message: null,
+        created_at: new Date().toISOString(),
+      }
+
+      updateCounterState((prev) => [newCounter, ...prev])
+      setNewProjectName('')
+      setShowAddForm(false)
+      return
+    }
+
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabase!
         .from('counters')
-        .insert([{ project_name: newProjectName, count: 0 }])
+        .insert([{ project_name: trimmedName, count: 0 }])
         .select()
 
       if (error) throw error
-      
-      setCounters([data[0], ...counters])
+      if (!data || data.length === 0) throw new Error('No counter returned from Supabase.')
+
+      updateCounterState((prev) => [data[0], ...prev])
       setNewProjectName('')
       setShowAddForm(false)
     } catch (error) {
@@ -71,20 +131,35 @@ export default function RowCounter() {
     // Don't allow negative counts
     if (newCount < 0) return
 
+    const counter = counters.find(c => c.id === id)
+
+    if (shouldUseLocalStorage) {
+      updateCounterState((prev) => 
+        prev.map(c => 
+          c.id === id ? { ...c, count: newCount } : c
+        )
+      )
+
+      if (counter?.alert_row && newCount === counter.alert_row && counter.alert_message) {
+        alert(`🔔 ALERT: ${counter.alert_message}`)
+      }
+      return
+    }
+
     try {
-      const { error } = await supabase
+      const { error } = await supabase!
         .from('counters')
         .update({ count: newCount })
         .eq('id', id)
 
       if (error) throw error
 
-      setCounters(counters.map(c => 
-        c.id === id ? { ...c, count: newCount } : c
-      ))
+      updateCounterState((prev) => 
+        prev.map(c => 
+          c.id === id ? { ...c, count: newCount } : c
+        )
+      )
 
-      // Check if we hit an alert
-      const counter = counters.find(c => c.id === id)
       if (counter?.alert_row && newCount === counter.alert_row && counter.alert_message) {
         alert(`🔔 ALERT: ${counter.alert_message}`)
       }
@@ -103,15 +178,20 @@ export default function RowCounter() {
   async function deleteCounter(id: number) {
     if (!confirm('Are you sure you want to delete this counter? This cannot be undone!')) return
 
+    if (shouldUseLocalStorage) {
+      updateCounterState((prev) => prev.filter(c => c.id !== id))
+      return
+    }
+
     try {
-      const { error } = await supabase
+      const { error } = await supabase!
         .from('counters')
         .delete()
         .eq('id', id)
 
       if (error) throw error
 
-      setCounters(counters.filter(c => c.id !== id))
+      updateCounterState((prev) => prev.filter(c => c.id !== id))
     } catch (error) {
       console.error('Error deleting counter:', error)
       alert('Failed to delete counter. Please try again.')
@@ -119,10 +199,27 @@ export default function RowCounter() {
   }
 
   async function saveAlert(id: number) {
+    const alertRow = editAlertRow ? parseInt(editAlertRow, 10) : null
+
+    if (shouldUseLocalStorage) {
+      updateCounterState((prev) => 
+        prev.map(c => 
+          c.id === id ? { 
+            ...c, 
+            alert_row: alertRow,
+            alert_message: editAlertMessage || null
+          } : c
+        )
+      )
+
+      setEditingCounter(null)
+      setEditAlertRow('')
+      setEditAlertMessage('')
+      return
+    }
+
     try {
-      const alertRow = editAlertRow ? parseInt(editAlertRow) : null
-      
-      const { error } = await supabase
+      const { error } = await supabase!
         .from('counters')
         .update({ 
           alert_row: alertRow,
@@ -132,13 +229,15 @@ export default function RowCounter() {
 
       if (error) throw error
 
-      setCounters(counters.map(c => 
-        c.id === id ? { 
-          ...c, 
-          alert_row: alertRow,
-          alert_message: editAlertMessage || null
-        } : c
-      ))
+      updateCounterState((prev) => 
+        prev.map(c => 
+          c.id === id ? { 
+            ...c, 
+            alert_row: alertRow,
+            alert_message: editAlertMessage || null
+          } : c
+        )
+      )
 
       setEditingCounter(null)
       setEditAlertRow('')
@@ -170,7 +269,13 @@ export default function RowCounter() {
         </p>
       </div>
 
-      {/* Add Counter Button */}
+        {shouldUseLocalStorage && (
+          <div className="bg-yellow-50 border border-yellow-200 text-sm text-warmBrown-dark p-4 rounded-lg mb-6">
+            Supabase is not configured, so your counters are stored locally on this device.
+          </div>
+        )}
+
+        {/* Add Counter Button */}
       {!showAddForm && (
         <button
           onClick={() => setShowAddForm(true)}
