@@ -12,8 +12,14 @@ import {
 } from 'lucide-react'
 import RowCounter from '../components/RowCounter'
 
+type TabId = 'dashboard' | 'patterns' | 'counter' | 'stash' | 'photos' | 'pricing'
+
 export default function AppPage() {
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeTab, setActiveTab] = useState<TabId>('dashboard')
+
+  const handleNavigate = (tab: TabId) => {
+    setActiveTab(tab)
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -28,9 +34,9 @@ export default function AppPage() {
       </header>
 
       {/* Main Content Area */}
-      <div className="flex-1 container mx-auto px-4 py-6">
-        <div className="max-w-6xl mx-auto">
-          {activeTab === 'dashboard' && <DashboardView />}
+        <div className="flex-1 container mx-auto px-4 py-6">
+          <div className="max-w-6xl mx-auto">
+            {activeTab === 'dashboard' && <DashboardView onNavigate={handleNavigate} />}
           {activeTab === 'patterns' && <PatternsView />}
           {activeTab === 'counter' && <CounterView />}
           {activeTab === 'stash' && <StashView />}
@@ -43,10 +49,10 @@ export default function AppPage() {
       <nav className="bg-white border-t border-cream-dark sticky bottom-0">
         <div className="container mx-auto px-4">
           <div className="flex justify-around">
-            {navItems.map((item) => (
+              {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleNavigate(item.id)}
                 className={`flex flex-col items-center py-3 px-4 transition-colors ${
                   activeTab === item.id
                     ? 'text-rose'
@@ -65,7 +71,7 @@ export default function AppPage() {
 }
 
 // Navigation items
-const navItems = [
+const navItems: { id: TabId; label: string; icon: typeof HomeIcon }[] = [
   { id: 'dashboard', label: 'Home', icon: HomeIcon },
   { id: 'patterns', label: 'Patterns', icon: Book },
   { id: 'counter', label: 'Counter', icon: Hash },
@@ -75,7 +81,7 @@ const navItems = [
 ]
 
 // Dashboard View
-function DashboardView() {
+function DashboardView({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-warmBrown">Welcome to Your Crochet Kit! 🧶</h2>
@@ -85,8 +91,12 @@ function DashboardView() {
           <h3 className="text-xl font-bold text-warmBrown mb-3">Quick Start</h3>
           <p className="text-warmBrown-dark mb-4">Jump right in with your most-used tools:</p>
           <div className="space-y-2">
-            <button className="btn-primary w-full">Start Row Counter</button>
-            <button className="btn-secondary w-full">Add Pattern</button>
+              <button className="btn-primary w-full" onClick={() => onNavigate('counter')}>
+                Start Row Counter
+              </button>
+              <button className="btn-secondary w-full" onClick={() => onNavigate('patterns')}>
+                Add Pattern
+              </button>
           </div>
         </div>
 
